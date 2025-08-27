@@ -24,11 +24,13 @@ RUN set -e \
 	&& aria2c --max-connection-per-server=10 --min-split-size=1M --max-concurrent-downloads=10 https://download.oracle.com/graalvm/21/latest/graalvm-jdk-21_linux-x64_bin.tar.gz \
 	&& tar -zxvf ./graalvm-jdk-21_linux-x64_bin.tar.gz \
 	&& rm -rf ./graalvm-jdk-21_linux-x64_bin.tar.gz \
-	&& ln -s /opt/graalvm/graalvm-jdk-21.0.6+8.1/bin/java /usr/bin/java \
-	&& ln -s /opt/graalvm/graalvm-jdk-21.0.6+8.1/bin/javac /usr/bin/javac \
-	&& ln -s /opt/graalvm/graalvm-jdk-21.0.6+8.1/bin/native-image /usr/bin/native-image
-ENV JAVA_HOME=/opt/graalvm/graalvm-jdk-21.0.6+8.1
-ENV GRAALVM_HOME=/opt/graalvm/graalvm-jdk-21.0.6+8.1
+	&& PATH_FRAG=$(ls -A /opt/graalvm) \
+	&& ln -s /opt/graalvm/$PATH_FRAG/bin/java /usr/bin/java \
+	&& ln -s /opt/graalvm/$PATH_FRAG/bin/javac /usr/bin/javac \
+	&& ln -s /opt/graalvm/$PATH_FRAG/bin/native-image /usr/bin/native-image \
+	&& java -version
+ENV JAVA_HOME=/opt/graalvm/$PATH_FRAG
+ENV GRAALVM_HOME=/opt/graalvm/$PATH_FRAG
 
 RUN set -e \
 	&& cd /opt \
